@@ -13,6 +13,8 @@ The project documentation is organized into modular sections for better clarity 
 - [**Main Documentation Index**](docs/README.md)
 - [Architecture Overview](docs/architecture.md)
 - [Core API Reference](docs/core-api-reference.md)
+- [Command Package](docs/command-package.md)
+- [Exceptions & Error Handling](docs/exceptions-package.md)
 - [API Specification](docs/api-specification.md)
 - [Configuration & Setup](docs/configuration-setup.md)
 - [Implementation Details](docs/implementation-details.md)
