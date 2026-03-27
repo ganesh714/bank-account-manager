@@ -1,38 +1,50 @@
-# Command Package Documentation
+# Command Side (Write Model)
 
-The `command` package represents the **Write Model** (Command side) of the application. It is responsible for handling intent-based requests, validating business rules, and ensuring data consistency before emitting events into the Event Store.
+This document explains how the application handles requests to change data, ensuring that all modifications follow strict business rules and are correctly audited.
 
-## 1. Aggregate (`BankAccount`)
-The `BankAccount` class is an Axon **Aggregate**. It encapsulates the current state of a bank account and acts as the strict gatekeeper that enforces domain-specific business rules.
+## 1. The Aggregate (`BankAccount.java`)
 
-### Annotation Usage
-- **`@Aggregate`**: Informs Axon that this class is an aggregate managed by calculations within its own lifecycle.
-- **`@AggregateIdentifier`**: Marks the field (`accountId`) that serves as the unique key for this aggregate instance.
-- **`@CommandHandler`**: Annotates methods (and constructors) that respond to incoming commands.
-- **`@EventSourcingHandler`**: Annotates methods that update the internal state based on past events, used when reconstructing the aggregate from the Event Store.
+### Role: The Gatekeeper
+The `BankAccount` class acts as the strict **"gatekeeper"** of the system. It is the first point of contact for any command that intends to modify an account. It receives commands and enforces business invariants (rules) before allowing any state changes to occur.
 
-### Handled Commands
-- **`CreateAccountCommand`**: Initializes a new account.
-    - *Validation*: Ensures the initial balance is non-negative.
-- **`DepositMoneyCommand`**: Adds funds to the account.
-    - *Action*: Applies a `MoneyDepositedEvent`.
-- **`WithdrawMoneyCommand`**: Removes funds from the account.
-    - *Validation*: Checks for sufficient funds (current balance >= withdrawal amount).
-- **`CloseAccountCommand`**: Permanently closes the account.
-    - *Validation*: Ensures the current balance is exactly zero.
+### Event Sourcing
+In this system, state is **not persisted directly** in a traditional database table. Instead, the aggregate maintains its integrity by storing events.
+- **State Reconstruction**: The aggregate recalculates its current state (such as `balance` and `status`) by replaying historical events using `@EventSourcingHandler` methods.
+- **Fact-Based Truth**: The system's "source of truth" is the immutable stream of events in the PostgreSQL event store.
+
+### Business Rules Enforced
+The following rules are strictly enforced within the aggregate before an event is applied:
+
+- **Creation**: The initial balance of a new account **cannot be negative**.
+- **Deposits/Withdrawals**: Actions cannot be performed on an account that has a **"CLOSED"** status. All transaction amounts must be **greater than zero**.
+- **Withdrawals**: The system **prevents overdrafts**. A withdrawal is only permitted if the resulting balance would not drop below zero.
+- **Closure**: An account can only be closed if its balance is **exactly zero**.
 
 ---
 
-## 2. Controllers (`BankAccountCommandController`)
-The `BankAccountCommandController` provides the RESTful entry point for clients to interact with the Command Model.
+## 2. The Command REST API (`BankAccountCommandController.java`)
 
-### Key Components
-- **`CommandGateway`**: Axon's gateway used to asynchronous dispatch commands to the aggregate.
-- **Endpoint Mapping**:
-    - `POST /api/accounts`: Dispatches `CreateAccountCommand`.
-    - `POST /api/accounts/{id}/deposit`: Dispatches `DepositMoneyCommand`.
-    - `POST /api/accounts/{id}/withdraw`: Dispatches `WithdrawMoneyCommand`.
-    - `POST /api/accounts/{id}/close`: Dispatches `CloseAccountCommand`.
+### Role: Command Dispatcher
+The `BankAccountCommandController` exposes HTTP POST endpoints to accept user requests. Its primary role is to translate these external requests into internal Command objects and dispatch them to the Aggregate using Axon's **`CommandGateway`**.
 
-### Data Transfer Objects (DTOs)
-The controller uses local Java **`record`s** (e.g., `CreateAccountRequest`, `AmountRequest`) to cleanly map incoming JSON request bodies to internal command parameters.
+### Required Endpoints
+
+#### **Create Account**
+- **Endpoint**: `POST /api/accounts`
+- **Payload**: `{ "initialBalance": 1000.00, "ownerName": "John Doe" }`
+- **Success Response (201 Created)**: Returns a `Location` header pointing to the new resource and the new `accountId` in the response body.
+
+#### **Deposit Money**
+- **Endpoint**: `POST /api/accounts/{accountId}/deposit`
+- **Payload**: `{ "amount": 500.00 }`
+- **Success Response (200 OK)**: Empty body.
+
+#### **Withdraw Money**
+- **Endpoint**: `POST /api/accounts/{accountId}/withdraw`
+- **Payload**: `{ "amount": 200.00 }`
+- **Success Response (200 OK)**: Empty body.
+
+#### **Close Account**
+- **Endpoint**: `POST /api/accounts/{accountId}/close`
+- **Payload**: None
+- **Success Response (200 OK)**: Empty body.
