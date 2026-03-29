@@ -24,5 +24,13 @@ Specifically configured in `src/main/resources/application.properties`:
     - `spring.jpa.show-sql=true` is enabled to allow developers to monitor the database interaction between Axon, JPA, and PostgreSQL.
 
 ## 4. Running the Application
-1. **Ensure PostgreSQL is Up**: `docker-compose up -d`
+
+### Option A: Running with Docker (Recommended)
+The entire stack (PostgreSQL + Application) can be launched with a single command:
+1. Ensure Docker is running.
+2. Launch the stack: `docker-compose up --build -d`
+3. The application will be available at `http://localhost:8080`.
+
+### Option B: Local Development
+1. **Ensure PostgreSQL is Up**: `docker-compose up -d db`
 2. **Run Spring Boot**: `./mvnw spring-boot:run`
