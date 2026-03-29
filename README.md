@@ -13,10 +13,12 @@ The project documentation is organized into modular sections for better clarity 
 - [**Main Documentation Index**](docs/README.md)
 - [Architecture Overview](docs/architecture.md)
 - [Core API Reference](docs/core-api-reference.md)
-- [Command Package](docs/command-package.md)
-- [Exceptions & Error Handling](docs/exceptions-package.md)
-- [API Specification](docs/api-specification.md)
-- [Configuration & Setup](docs/configuration-setup.md)
+- [**Query Side (Read Model)**](./docs/query-side.md): Learn about projections, view models, and the Query REST API.
+- [**Temporal Queries**](./docs/temporal-queries.md): How to reconstruct account balance at any specific point in history.
+- [**Infrastructure & Advanced**](./docs/infrastructure-advanced.md): Guide on Snapshotting and Event Replay (Read Model Rebuilding).
+- [**Exceptions & Mapping**](./docs/exceptions-package.md): Documentation on the system's error-handling strategy (404/409).
+- [**API Specification**](./docs/api-specification.md): Technical details of all REST endpoints.
+- [**Configuration & Setup**](./docs/configuration-setup.md): Deployment and setup guide.
 - [Implementation Details](docs/implementation-details.md)
 - [**Current Progress Report**](docs/progress-report.md)
 
