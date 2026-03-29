@@ -16,7 +16,7 @@ import com.software.bank_account_manager.coreapi.events.MoneyDepositedEvent;
 import com.software.bank_account_manager.coreapi.events.MoneyWithdrawnEvent;
 
 
-@Aggregate
+@Aggregate(snapshotTriggerDefinition = "bankAccountSnapshotTriggerDefinition")
 public class BankAccount {
 	
 	@AggregateIdentifier

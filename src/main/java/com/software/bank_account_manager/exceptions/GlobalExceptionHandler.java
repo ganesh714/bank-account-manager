@@ -3,16 +3,16 @@ package com.software.bank_account_manager.exceptions;
 import java.util.Map;
 
 import org.axonframework.commandhandling.CommandExecutionException;
-import org.axonframework.messaging.interceptors.ExceptionHandler;
 import org.axonframework.modelling.command.AggregateNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
 	
-	@ExceptionHandler(AggregateNotFoundException.class)
+	@ExceptionHandler(AggregateNotFoundException .class)
 	public ResponseEntity<Object> handleAggregateNotFound(AggregateNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(Map.of("error", "Account not found", "details", ex.getMessage()));
