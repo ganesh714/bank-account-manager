@@ -24,10 +24,16 @@ public class AxonConfig {
     public org.axonframework.eventsourcing.eventstore.EventStorageEngine storageEngine(
             org.axonframework.common.jpa.EntityManagerProvider entityManagerProvider,
             org.axonframework.common.transaction.TransactionManager transactionManager,
-            org.axonframework.serialization.Serializer defaultSerializer) {
+            com.fasterxml.jackson.databind.ObjectMapper objectMapper) {
+        
+        org.axonframework.serialization.Serializer jacksonSerializer = 
+            org.axonframework.serialization.json.JacksonSerializer.builder()
+                .objectMapper(objectMapper)
+                .build();
+
         return org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine.builder()
-                .snapshotSerializer(defaultSerializer)
-                .eventSerializer(defaultSerializer)
+                .snapshotSerializer(jacksonSerializer)
+                .eventSerializer(jacksonSerializer)
                 .entityManagerProvider(entityManagerProvider)
                 .transactionManager(transactionManager)
                 .build();
