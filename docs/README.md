@@ -6,8 +6,8 @@ Welcome to the documentation for the Bank Account Manager API. This project impl
 
 Explore the following sections for detailed information:
 
-- [Architecture Overview](docs/architecture.md): Learn about the system design, Event Sourcing, and CQRS implementation.
-- [Core API Reference](docs/core-api-reference.md): Detailed documentation of all Commands, Events, and Annotations.
+- [Architecture Overview](./architecture.md): Learn about the system design, Event Sourcing, and CQRS implementation.
+- [Core API Reference](./core-api-reference.md): Detailed documentation of all Commands, Events, and Annotations.
 - [**Command Package**](./command-package.md): Information on aggregate and business invariants.
 - [**Query Side (Read Model)**](./query-side.md): View models, projections, and querying.
 - [**Temporal Queries**](./temporal-queries.md): Reconstructing state at any point in time.
