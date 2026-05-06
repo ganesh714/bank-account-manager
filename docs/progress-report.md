@@ -30,15 +30,15 @@ This document outlines the detailed implementation status of the Bank Account Ma
 ## Pending Work
 
 ### 1. Command Side Implementation
-- [ ] Implement the `BankAccount` aggregate with business validation logic and event processing.
-- [ ] Implement the Command Controller to dispatch commands to Axon's Gateway.
+- [x] Implement the `BankAccount` aggregate with business validation logic and event processing.
+- [x] Implement the Command Controller to dispatch commands to Axon's Gateway.
 
 ### 2. Query Side (Projections)
-- [ ] Implement the `CurrentAccountViewProjection` to maintain current state.
-- [ ] Implement the `TransactionHistoryProjection` for account statements.
-- [ ] Implement the Query Controller to serve the read models.
+- [x] Implement the `CurrentAccountViewProjection` to maintain current state.
+- [x] Implement the `TransactionHistoryProjection` for account statements.
+- [x] Implement the Query Controller to serve the read models.
 
 ### 3. Advanced Features
-- [ ] Configure the Snapshot Trigger policy (every 5 events).
-- [ ] Implement the temporal query (balance-at-time) using event reconstruction.
-- [ ] Create the `replay-events.sh` script and required management endpoints.
+- [x] Configure the Snapshot Trigger policy (every 5 events).
+- [x] Implement the temporal query (balance-at-time) using event reconstruction.
+- [x] Create the `replay-events.sh` script and required management endpoints.
