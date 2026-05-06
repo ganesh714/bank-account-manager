@@ -43,4 +43,3 @@ The project documentation is organized into modular sections for better clarity 
 For detailed instructions, refer to the [Setup Guide](docs/configuration-setup.md).
 
 ---
-*Created by Antigravity AI*
