@@ -10,6 +10,8 @@ import org.axonframework.spring.stereotype.Aggregate;
 
 import com.software.bank_account_manager.coreapi.commands.CloseAccountCommand;
 import com.software.bank_account_manager.coreapi.commands.CreateAccountCommand;
+import com.software.bank_account_manager.coreapi.commands.DepositMoneyCommand;
+import com.software.bank_account_manager.coreapi.commands.WithdrawMoneyCommand;
 import com.software.bank_account_manager.coreapi.events.AccountClosedEvent;
 import com.software.bank_account_manager.coreapi.events.AccountCreatedEvent;
 import com.software.bank_account_manager.coreapi.events.MoneyDepositedEvent;
@@ -43,6 +45,25 @@ public class BankAccount {
         ));
     }
     
+    @CommandHandler
+    public void handle(DepositMoneyCommand command) {
+        if (command.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Deposit amount must be strictly positive");
+        }
+        AggregateLifecycle.apply(new MoneyDepositedEvent(command.accountId(), command.amount()));
+    }
+
+    @CommandHandler
+    public void handle(WithdrawMoneyCommand command) {
+        if (command.amount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Withdrawal amount must be strictly positive");
+        }
+        if (this.balance.compareTo(command.amount()) < 0) {
+            throw new IllegalStateException("Insufficient funds");
+        }
+        AggregateLifecycle.apply(new MoneyWithdrawnEvent(command.accountId(), command.amount()));
+    }
+
     @CommandHandler
     public void handle(CloseAccountCommand command) {
     	// Account balance must be exactly zero to close
