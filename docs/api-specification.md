@@ -11,6 +11,7 @@ This document describes the REST API endpoints available in the Bank Account Man
 | POST | `/api/accounts/{accountId}/withdraw` | Withdraw money from an account. |
 | POST | `/api/accounts/{accountId}/close` | Close a bank account. |
 | GET | `/api/accounts/{accountId}` | Retrieve the current state of an account. |
+| GET | `/api/accounts/{accountId}/history` | Retrieve chronological transaction history. |
 | GET | `/api/accounts/{accountId}/events` | Retrieve the raw event stream for an account. |
 | GET | `/api/accounts/{accountId}/balance-at/{timestamp}` | Retrieve the account balance at a specific point in time. |
 
@@ -81,6 +82,23 @@ This document describes the REST API endpoints available in the Bank Account Man
 }
 ```
 **Error Response (404 Not Found)**: If `{accountId}` does not exist in the projection.
+
+---
+
+### Get Transaction History
+**Endpoint**: `GET /api/accounts/{accountId}/history`
+**Success Response (200 OK)**:
+```json
+[
+  {
+    "id": 1,
+    "accountId": "string",
+    "type": "DEPOSIT",
+    "amount": 500.00,
+    "timestamp": "2023-10-27T10:00:00Z"
+  }
+]
+```
 
 ---
 
