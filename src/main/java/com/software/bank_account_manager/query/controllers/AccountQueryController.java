@@ -20,7 +20,9 @@ import com.software.bank_account_manager.coreapi.events.AccountCreatedEvent;
 import com.software.bank_account_manager.coreapi.events.MoneyDepositedEvent;
 import com.software.bank_account_manager.coreapi.events.MoneyWithdrawnEvent;
 import com.software.bank_account_manager.query.models.CurrentAccountView;
+import com.software.bank_account_manager.query.models.TransactionHistory;
 import com.software.bank_account_manager.query.repositories.CurrentAccountViewRepository;
+import com.software.bank_account_manager.query.repositories.TransactionHistoryRepository;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -29,6 +31,8 @@ public class AccountQueryController {
 	@Autowired
 	CurrentAccountViewRepository repository;
 	@Autowired
+	TransactionHistoryRepository historyRepository;
+	@Autowired
 	EventStore eventStore;
 	
 	@GetMapping("/{accountId}")
@@ -36,6 +40,12 @@ public class AccountQueryController {
         return repository.findById(accountId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+	
+	@GetMapping("/{accountId}/history")
+    public ResponseEntity<List<TransactionHistory>> getAccountHistory(@PathVariable String accountId) {
+        List<TransactionHistory> history = historyRepository.findByAccountIdOrderByTimestampDesc(accountId);
+        return ResponseEntity.ok(history);
     }
 	
 	@GetMapping("/{accountId}/events")
