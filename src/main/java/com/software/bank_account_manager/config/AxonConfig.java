@@ -16,6 +16,11 @@ public class AxonConfig {
     }
 
     @Bean
+    public org.axonframework.common.jpa.EntityManagerProvider entityManagerProvider(jakarta.persistence.EntityManager entityManager) {
+        return new org.axonframework.common.jpa.SimpleEntityManagerProvider(entityManager);
+    }
+
+    @Bean
     public org.axonframework.eventsourcing.eventstore.EventStorageEngine storageEngine(
             org.axonframework.common.jpa.EntityManagerProvider entityManagerProvider,
             org.axonframework.common.transaction.TransactionManager transactionManager) {
