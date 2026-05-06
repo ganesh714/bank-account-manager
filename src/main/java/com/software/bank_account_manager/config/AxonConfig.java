@@ -23,8 +23,11 @@ public class AxonConfig {
     @Bean
     public org.axonframework.eventsourcing.eventstore.EventStorageEngine storageEngine(
             org.axonframework.common.jpa.EntityManagerProvider entityManagerProvider,
-            org.axonframework.common.transaction.TransactionManager transactionManager) {
+            org.axonframework.common.transaction.TransactionManager transactionManager,
+            org.axonframework.serialization.Serializer defaultSerializer) {
         return org.axonframework.eventsourcing.eventstore.jpa.JpaEventStorageEngine.builder()
+                .snapshotSerializer(defaultSerializer)
+                .eventSerializer(defaultSerializer)
                 .entityManagerProvider(entityManagerProvider)
                 .transactionManager(transactionManager)
                 .build();
@@ -32,12 +35,9 @@ public class AxonConfig {
 
     @Bean
     public org.axonframework.eventsourcing.eventstore.EmbeddedEventStore eventStore(
-            org.axonframework.eventsourcing.eventstore.EventStorageEngine storageEngine,
-            org.axonframework.spring.config.AxonConfiguration configuration) {
+            org.axonframework.eventsourcing.eventstore.EventStorageEngine storageEngine) {
         return org.axonframework.eventsourcing.eventstore.EmbeddedEventStore.builder()
                 .storageEngine(storageEngine)
-                .messageMonitor(configuration
-                        .messageMonitor(org.axonframework.eventsourcing.eventstore.EventStore.class, "eventStore"))
                 .build();
     }
 }
